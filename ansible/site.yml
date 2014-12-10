@@ -1,0 +1,6 @@
+# site.yml
+---
+- hosts: linuxserver
+  sudo: true
+  roles:
+    - wordpress

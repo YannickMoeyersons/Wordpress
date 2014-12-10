@@ -1,0 +1,130 @@
+---
+- name: Install repositories
+  yum: pkg={{item}} state=installed
+  with_items:
+    - http://fedora.cu.be/epel/7/x86_64/e/epel-release-7-2.noarch.rpm
+
+- name: Install common packages
+  yum: pkg={{item}} state=installed
+  with_items:
+    - libselinux-python
+    
+- name: Enable firewall
+  service: name=firewalld state=running enabled=true
+  tags: common
+
+- name: Install MySQL
+  yum: pkg={{item}} state=installed
+  with_items:
+    - mariadb
+    - mariadb-server
+    - MySQL-python
+
+- name: Start MySQL service
+  service: name=mariadb state=running enabled=yes
+- name: Create application database
+  mysql_db: name={{ dbname }} state=present
+- name: Create application database user
+  mysql_user: name={{ dbuser }} password={{ dbpasswd }}
+              priv=*.*:ALL host='localhost' state=present
+ 
+- name: Install Apache
+  yum: pkg={{item}} state=installed
+  with_items:
+    - httpd
+    - php
+    - php-xml
+    - php-mysql
+- name: Start Apache service
+  service: name=httpd state=running enabled=yes
+- name: Configure Firewall (permanent)
+  firewalld: service=http state=enabled permanent=true
+- name: Configure Firewall
+  firewalld: service=http state=enabled permanent=false
+
+- name: Install Wordpress (from EPEL)
+  yum: pkg={{item}} state=installed
+  with_items:
+     - wordpress
+
+- name: Apache config file for Wordpress
+  copy: 
+     src=wordpress.conf
+     dest=/etc/httpd/conf.d/wordpress.conf
+     owner=root
+     group=root
+     mode=0644
+     setype=httpd_config_t
+  notify: Restart Apache
+  
+- name: Create database
+  mysql_db: name={{ wordpress_database }} state=present
+
+- name: Create user
+  mysql_user:
+      name={{ wordpress_user }}
+      state=present
+      password={{ wordpress_password }}
+      priv="{{ wordpress_database }}.*:ALL,GRANT"
+
+- name: Wordpress config file
+  template:
+    src=wp-config.php.j2
+    dest=/etc/wordpress/wp-config.php
+    owner=root
+    group=apache
+    mode=0640
+    setype=etc_t
+  notify: Restart Apache
+
+- name: Install openssl & mod_ssl 
+  yum: pkg={{item}} state=installed
+  with_items:
+     - mod_ssl
+     - openssl
+
+- name: OpenSSL config file SSLCertificateFile
+  copy: 
+     src=ca.crt
+     dest=/etc/pki/tls/certs
+     owner=root
+     group=root
+     mode=0600
+     setype=httpd_config_t
+  notify: Restart Apache
+  
+- name: OpenSSL config file SSLCertificateKeyFile part 1
+  copy: 
+     src=ca.key
+     dest=/etc/pki/tls/private/ca.key
+     owner=root
+     group=root
+     mode=0600
+     setype=httpd_config_t
+  notify: Restart Apache
+  
+- name: OpenSSL config file SSLCertificateKeyFile part 2
+  copy: 
+     src=ca.csr
+     dest=/etc/pki/tls/private/ca.csr
+     owner=root
+     group=root
+     mode=0600
+     setype=httpd_config_t
+  notify: Restart Apache
+  
+- name: Add ssl.conf
+  copy: 
+     src=ssl.conf
+     dest=/etc/httpd/conf.d/ssl.conf
+     owner=root
+     group=root
+     mode=0644
+     setype=httpd_config_t
+  notify: Restart Apache
+  
+- name: Add firewall rule for the SSL port 443 (perm)
+  firewalld: port=443/tcp permanent=true state=enabled
+  
+- name: Add firewall rule for the SSL port 443 (non-perm)
+  firewalld: port=443/tcp permanent=false state=enabled

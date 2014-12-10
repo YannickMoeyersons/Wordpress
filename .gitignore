@@ -1,0 +1,10 @@
+# .gitignore
+
+# Ignore hidden Vagrant-directory
+.vagrant
+
+# Ignore backup files
+*~
+
+# BATS installation
+test/bats/

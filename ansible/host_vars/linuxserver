@@ -1,0 +1,15 @@
+wordpress_database: SoS_DB
+wordpress_user: SoS_User
+wordpress_password: SoS_Password
+wordpress_salt: >
+  define('AUTH_KEY',         '/*=;qh7IOCm@Q|#9Q*e[;&j]5lJC.|5EWM[,~buA2iDU*tTV:~ns|`dh<:yy|tKQ');
+  define('SECURE_AUTH_KEY',  '>>s:(3oRq-dA~+,z:TEWuW@i=ez|-Q*sfFR8O1EGXj|-bCQRT;4wWq#(|ottN.TP');
+  define('LOGGED_IN_KEY',    'v:nWme{`Ri_R%6^*=gb7f?Jni<@j= vaKmuGA8#@RlSa|-Ic`0dLde}D2dVTsj#[');
+  define('NONCE_KEY',        '1Wa$|PL@*TX_x}W<&DyXj<mRXh9b`,@R+  d8/d9xb12m>6!o8bP5>2i@(t6da0[');
+  define('AUTH_SALT',        '.yAt<iZ3}-g Zc>8}OgihQmNKwy,[d)?V8-(q>D:8&o4ymzrI*Eu/1|]e$k_,Pch');
+  define('SECURE_AUTH_SALT', '=*$?>lugn*rMhg!)rmoN^>?keSOKACG)Dth|yP#)2)Tb}-o[[7PP&[X_OyT4|-Q/');
+  define('LOGGED_IN_SALT',   'E%H*#1ZIul>~+.F/.R9D-&}NbQs>(:@RD+l++)Si~P@gV|3eEc+)4w$@+6xx0$k*');
+  define('NONCE_SALT',       '&h&eb(DA:L*,%D-8T|Y_z}aR1.=X978-0bffxo/=x;EZ[.y0;*sU?mQ,WO&MLawX');
+
+install_profile: standard
+locale: fi

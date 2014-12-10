@@ -1,0 +1,15 @@
+---
+
+galaxy_info:
+  author: System one Solutions
+  description: This is an ansible role for Wordpress
+  license: BSD
+  platforms:
+    - name: EL
+      versions:
+      - 7
+  categories:
+    - development
+    - web
+
+dependencies: []
