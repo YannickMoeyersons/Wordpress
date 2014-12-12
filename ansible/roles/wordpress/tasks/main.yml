@@ -2,7 +2,7 @@
 - name: Install repositories
   yum: pkg={{item}} state=installed
   with_items:
-    - http://fedora.cu.be/epel/7/x86_64/e/epel-release-7-2.noarch.rpm
+    - https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
 
 - name: Install common packages
   yum: pkg={{item}} state=installed
